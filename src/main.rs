@@ -1,3 +1,5 @@
+use std::io::{self, Read};
+
 use clap::Parser;
 use colored::Colorize;
 use anyhow::{Context, Result};
@@ -14,11 +16,19 @@ struct Options {
     #[clap(short='f', long="file")]
     /// Load the cat picture from the specified file
     dogfile: Option<std::path::PathBuf>,
+    #[clap(short='i', long="stdin")]
+    /// Read the message from STDIN instead of the argument
+    stdin: bool,
 }
 
 fn main() -> Result<()> {
     let options = Options::parse();
-    let message = options.message;
+    let mut message = String::new();
+    if options.stdin {
+        io::stdin().read_to_string(&mut message)?;
+    } else {
+        message = options.message;
+    }
     match &options.dogfile {
         Some(path) => {
             let dog_template = std::fs::read_to_string(path)

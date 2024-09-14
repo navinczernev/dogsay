@@ -15,15 +15,12 @@ struct Options {
     dogfile: Option<std::path::PathBuf>,
 }
 
-fn main() {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     let options = Options::parse();
     let message = options.message;
     match &options.dogfile {
         Some(path) => {
-            let dog_template = std::fs::read_to_string(path)
-                                        .expect(
-                                            &format!("Could not read file {:?}", path)
-                                        );
+            let dog_template = std::fs::read_to_string(path)?;
             let eye = if options.dead { "x" } else { "0" };
             let eye = format!("{}", eye.red().bold());
             let dog_picture = dog_template.replace("{eye}", &eye);
@@ -47,4 +44,5 @@ fn main() {
             println!("  || (__V");
         },
     }
+    Ok(())
 }

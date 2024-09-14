@@ -10,22 +10,41 @@ struct Options {
     #[clap(short='d', long="dead")]
     /// Make the dog appear dead
     dead: bool,
+    #[clap(short='f', long="file")]
+    /// Load the cat picture from the specified file
+    dogfile: Option<std::path::PathBuf>,
 }
 
 fn main() {
     let options = Options::parse();
     let message = options.message;
-    if message.to_lowercase().contains("meow") {
-        eprintln!("A dog shouldn't say meow.");
+    match &options.dogfile {
+        Some(path) => {
+            let dog_template = std::fs::read_to_string(path)
+                                        .expect(
+                                            &format!("Could not read file {:?}", path)
+                                        );
+            let eye = if options.dead { "x" } else { "0" };
+            let eye = format!("{}", eye.red().bold());
+            let dog_picture = dog_template.replace("{eye}", &eye);
+            println!("{}", message.underline().bright_green().on_blue());
+            println!("{}", &dog_picture);
+        },
+        None => {
+            if message.to_lowercase().contains("meow") {
+                eprintln!("A dog shouldn't say meow.");
+            }
+            let eye = if options.dead { "x" } else { "0" };
+            let eye = format!("{}", eye.red().bold());
+            println!("{}", message.underline().bright_green().on_blue());
+            println!("\\");
+            println!(" \\");
+            println!("  /^ ^\\");
+            println!(" / {eye} {eye} \\");
+            println!(" V\\ Y /V");
+            println!("  / - \\");
+            println!("  |    \\");
+            println!("  || (__V");
+        },
     }
-    let eye = (if options.dead { "x" } else { "0" }).red().bold();
-    println!("{}", message.underline().bright_green().on_blue());
-    println!("\\");
-    println!(" \\");
-    println!("  /^ ^\\");
-    println!(" / {eye} {eye} \\");
-    println!(" V\\ Y /V");
-    println!("  / - \\");
-    println!("  |    \\");
-    println!("  || (__V");
 }

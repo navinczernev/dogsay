@@ -14,6 +14,9 @@ struct Options {
 fn main() {
     let options = Options::parse();
     let message = options.message;
+    if message.to_lowercase().contains("meow") {
+        eprintln!("A dog shouldn't say meow.");
+    }
     let eye = if options.dead { "x" } else { "0" };
     println!("{message}");
     println!("\\");

@@ -3,6 +3,8 @@ use clap::Parser;
 
 #[derive(Parser)]
 struct Options {
+    #[clap(default_value="woof!")]
+    /// What does the dog say?
     message: String,
 }
 

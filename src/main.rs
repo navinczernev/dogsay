@@ -1,4 +1,5 @@
 use clap::Parser;
+use colored::Colorize;
 
 
 #[derive(Parser)]
@@ -17,8 +18,8 @@ fn main() {
     if message.to_lowercase().contains("meow") {
         eprintln!("A dog shouldn't say meow.");
     }
-    let eye = if options.dead { "x" } else { "0" };
-    println!("{message}");
+    let eye = (if options.dead { "x" } else { "0" }).red().bold();
+    println!("{}", message.underline().bright_green().on_blue());
     println!("\\");
     println!(" \\");
     println!("  /^ ^\\");

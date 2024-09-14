@@ -1,5 +1,6 @@
 use clap::Parser;
 use colored::Colorize;
+use anyhow::{Context, Result};
 
 
 #[derive(Parser)]
@@ -15,12 +16,15 @@ struct Options {
     dogfile: Option<std::path::PathBuf>,
 }
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn main() -> Result<()> {
     let options = Options::parse();
     let message = options.message;
     match &options.dogfile {
         Some(path) => {
-            let dog_template = std::fs::read_to_string(path)?;
+            let dog_template = std::fs::read_to_string(path)
+                                        .with_context(
+                                            || format!("Could not read file {:?}", path)
+                                        )?;
             let eye = if options.dead { "x" } else { "0" };
             let eye = format!("{}", eye.red().bold());
             let dog_picture = dog_template.replace("{eye}", &eye);

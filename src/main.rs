@@ -7,7 +7,7 @@ use anyhow::{Context, Result};
 
 #[derive(Parser)]
 struct Options {
-    #[clap(default_value="woof!")]
+    #[clap(default_value="Woof!")]
     /// What does the dog say?
     message: String,
     #[clap(short='d', long="dead")]
